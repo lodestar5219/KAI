@@ -1,0 +1,81 @@
+<!-- Header -->
+<header class="shell header">
+  <div class="brand">
+    <span class="logo">🔐</span>
+    <h1>Angular + Keycloak Playground</h1>
+  </div>
+
+  <div class="status" [class.ok]="isAuthenticated()" [class.warn]="!isAuthenticated()">
+    <span class="dot"></span>
+    <strong>{{ isAuthenticated() ? 'Authenticated' : 'Guest' }}</strong>
+  </div>
+</header>
+
+<main class="shell grid">
+  <!-- Actions -->
+  <section class="card">
+    <h2>Quick Actions</h2>
+    <div class="btn-grid">
+      <button class="btn primary" (click)="login()" *ngIf="!isAuthenticated()">Login</button>
+      <button class="btn danger" (click)="logout()" *ngIf="isAuthenticated()">Logout</button>
+
+      <button class="btn" (click)="isLoggedIn()">Check isLoggedIn()</button>
+      <button class="btn" (click)="parseAccessToken()">Parse Access Token</button>
+      <button class="btn" (click)="isTokenExpired()">Is Token Expired?</button>
+      <button class="btn" (click)="updateToken()">Update Token</button>
+      <button class="btn" (click)="showRoles()">Show Roles</button>
+
+      <button class="btn" (click)="copyAccessTokenToClipboard()">Copy Token</button>
+    </div>
+    <p style="color: blueviolet;">
+      {{statusPanel}}
+    </p>
+    <p class="hint">
+      Tip: Results are shown as alerts and in the browser console (F12).
+    </p>
+  </section>
+
+  <!-- Roles -->
+  <section class="card">
+    <h2>Roles</h2>
+    <div *ngIf="roles()?.length; else noRoles">
+      <ul class="pill-list">
+        <li class="pill" *ngFor="let role of roles()">{{ role }}</li>
+      </ul>
+    </div>
+    <ng-template #noRoles>
+      <div class="empty">
+        <span>👀</span>
+        <p>No roles loaded yet. Click <b>Show Roles</b> after you log in.</p>
+      </div>
+    </ng-template>
+  </section>
+
+  <!-- Token Preview (on-demand via Parse Access Token) -->
+  <section class="card">
+    <h2>Token Tools</h2>
+    <ol class="steps">
+      <li>Click <b>Parse Access Token</b> to dump the JWT payload to the console.</li>
+      <li>Click <b>Copy Token</b> to send the raw JWT to your clipboard.</li>
+      <li>Use <b>Update Token</b> to refresh when it’s close to expiry.</li>
+    </ol>
+    <div class="note">
+      For security, token content isn’t auto-rendered here. Use the console output to inspect it.
+    </div>
+  </section>
+
+  <!-- API -->
+  <section class="card">
+    <h2>Protected API</h2>
+
+    <div class="empty">
+      <span>🛰️</span>
+      <p>Open DevTools → Console to see the response or any errors.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="shell footer">
+  <span>Made with ❤️ for quick Keycloak debugging</span>
+</footer>
+<router-outlet></router-outlet>
